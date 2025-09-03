@@ -1,0 +1,123 @@
+<resources>
+    <string name="app_name">Client_App</string>
+    <string name="back_button">Назад</string>
+    <string name="request_send">Надіслати запит</string>
+    <string name="result">Результат буде тут</string>
+    <string name="DwnFromUrl">Завантажити через URL</string>
+    <string name="ChangeLang">Змінити мову</string>
+
+
+    <!-- Коти -->
+    <string name="breed_abyssinian_name">Абіссинська</string>
+    <string name="breed_abyssinian_desc">Абіссинські кішки відомі своєю розумністю та грайливим характером.</string>
+
+    <string name="breed_bengal_name">Бенгальська</string>
+    <string name="breed_bengal_desc">Бенгальські кішки мають дикий вигляд, але лагідний характер.</string>
+
+    <string name="breed_bombay_name">Бомбейська</string>
+    <string name="breed_bombay_desc">Бомбейські кішки чорні та стрункі, нагадують маленьких пантер.</string>
+
+    <string name="breed_birman_name">Бірманська</string>
+    <string name="breed_birman_desc">Бірманські кішки лагідні та ніжні, з красивими блакитними очима.</string>
+
+    <string name="breed_british_shorthair_name">Британська короткошерста</string>
+    <string name="breed_british_shorthair_desc">Відомі круглими мордочками й густою шерстю, ці кішки спокійні та гідні.</string>
+
+    <string name="breed_maine_coon_name">Мейн-кун</string>
+    <string name="breed_maine_coon_desc">Великі, дружні та товариські кішки з китицями на вухах.</string>
+
+    <string name="breed_persian_name">Персидська</string>
+    <string name="breed_persian_desc">Перси тихі, ніжні, але вимагають регулярного догляду через довгу шерсть.</string>
+
+    <string name="breed_egyptian_mau_name">Єгипетський мау</string>
+    <string name="breed_egyptian_mau_desc">Одна з небагатьох природно плямистих порід домашніх кішок.</string>
+
+    <string name="breed_ragdoll_name">Регдолл</string>
+    <string name="breed_ragdoll_desc">Регдолли розслабляються, коли їх піднімають, і дуже ласкаві.</string>
+
+    <string name="breed_russian_blue_name">Російська блакитна</string>
+    <string name="breed_russian_blue_desc">Елегантні кішки з сріблясто-блакитною шерстю та зеленими очима.</string>
+
+    <string name="breed_siamese_name">Сіамська</string>
+    <string name="breed_siamese_desc">Балакуни та ласкаві кішки з вражаючими блакитними очима.</string>
+
+    <string name="breed_sphynx_name">Сфінкс</string>
+    <string name="breed_sphynx_desc">Безшерсті, енергійні, обожнюють увагу людини.</string>
+
+    <!-- Собаки -->
+    <string name="breed_boxer_name">Боксер</string>
+    <string name="breed_boxer_desc">Боксери сильні, енергійні та люблять грати.</string>
+
+    <string name="breed_keeshond_name">Кеесхонд</string>
+    <string name="breed_keeshond_desc">Кеесхонди доброзичливі й пильні, з лисим виразом морди.</string>
+
+    <string name="breed_havanese_name">Гаванський бішон</string>
+    <string name="breed_havanese_desc">Веселі собаки, чудові компаньйони.</string>
+
+    <string name="breed_basset_hound_name">Бассет-хаунд</string>
+    <string name="breed_basset_hound_desc">Низькорослі собаки з чудовим нюхом і спокійним характером.</string>
+
+    <string name="breed_english_setter_name">Англійський сетер</string>
+    <string name="breed_english_setter_desc">Лагідні та дружні, з крапчастою шерстю.</string>
+
+    <string name="breed_miniature_pinscher_name">Мініатюрний пінчер</string>
+    <string name="breed_miniature_pinscher_desc">Маленькі, але безстрашні, з гордим характером.</string>
+
+    <string name="breed_chihuahua_name">Чихуахуа</string>
+    <string name="breed_chihuahua_desc">Малесенькі та пильні, сповнені характеру.</string>
+
+    <string name="breed_great_pyrenees_name">Піренейська гірська</string>
+    <string name="breed_great_pyrenees_desc">Великі й спокійні охоронці, часто використовуються для захисту худоби.</string>
+
+    <string name="breed_german_shorthaired_name">Німецький короткошерстий пойнтер</string>
+    <string name="breed_german_shorthaired_desc">Універсальні та спортивні мисливські собаки.</string>
+
+    <string name="breed_beagle_name">Бігль</string>
+    <string name="breed_beagle_desc">Веселі, допитливі собаки з відмінним нюхом.</string>
+
+    <string name="breed_staffordshire_bull_terrier_name">Стаффордширський бультер’єр</string>
+    <string name="breed_staffordshire_bull_terrier_desc">Мускулисті та віддані, відомі своєю сміливістю.</string>
+
+    <string name="breed_english_cocker_spaniel_name">Англійський кокер-спанієль</string>
+    <string name="breed_english_cocker_spaniel_desc">Жваві та веселі собаки з довгими вухами.</string>
+
+    <string name="breed_newfoundland_name">Ньюфаундленд</string>
+    <string name="breed_newfoundland_desc">Величезні собаки, відомі рятуванням на воді та лагідною вдачею.</string>
+
+    <string name="breed_pomeranian_name">Померанський шпіц</string>
+    <string name="breed_pomeranian_desc">Пухнасті та жваві, з великим характером у маленькому тілі.</string>
+
+    <string name="breed_leonberger_name">Леонбергер</string>
+    <string name="breed_leonberger_desc">Великі, спокійні й дружні велетні.</string>
+
+    <string name="breed_american_pit_bull_terrier_name">Американський пітбультер’єр</string>
+    <string name="breed_american_pit_bull_terrier_desc">Сильні та віддані, часто неправильно зрозумілі.</string>
+
+    <string name="breed_wheaten_terrier_name">Ірландський м’якошерстий тер’єр</string>
+    <string name="breed_wheaten_terrier_desc">Доброзичливі тер’єри з м’якою шерстю.</string>
+
+    <string name="breed_japanese_chin_name">Японський хін</string>
+    <string name="breed_japanese_chin_desc">Елегантні й чарівні собаки-компаньйони.</string>
+
+    <string name="breed_samoyed_name">Самоїд</string>
+    <string name="breed_samoyed_desc">Білі пухнасті собаки з “усмішкою”.</string>
+
+    <string name="breed_scottish_terrier_name">Шотландський тер’єр</string>
+    <string name="breed_scottish_terrier_desc">Незалежні й гідні, з виразним профілем.</string>
+
+    <string name="breed_shiba_inu_name">Сіба-іну</string>
+    <string name="breed_shiba_inu_desc">Пильні та впевнені, з лисою зовнішністю.</string>
+
+    <string name="breed_pug_name">Мопс</string>
+    <string name="breed_pug_desc">Маленькі, товариські собаки з зморшкуватими мордочками.</string>
+
+    <string name="breed_saint_bernard_name">Сенбернар</string>
+    <string name="breed_saint_bernard_desc">Величезні собаки зі спокійним і терплячим характером.</string>
+
+    <string name="breed_american_bulldog_name">Американський бульдог</string>
+    <string name="breed_american_bulldog_desc">Сильні, віддані та атлетичні.</string>
+
+    <string name="breed_yorkshire_terrier_name">Йоркширський тер’єр</string>
+    <string name="breed_yorkshire_terrier_desc">Маленькі собаки з великим характером і довгою шовковистою шерстю.</string>
+
+</resources>

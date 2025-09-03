@@ -1,0 +1,124 @@
+<resources>
+<string name="app_name">Client_App</string>
+<string name="back_button" >Back</string>
+<string name="request_send" >Send request</string>
+<string name="result" >Result will be soon</string>
+<string name="DwnFromUrl" >Download from URL</string>
+<string name="ChangeLang" >Change language</string>
+
+    <!-- Cats -->
+    <string name="breed_abyssinian_name">Abyssinian</string>
+    <string name="breed_abyssinian_desc">Abyssinian cats are known for their intelligence and playful personality.</string>
+
+    <string name="breed_bengal_name">Bengal</string>
+    <string name="breed_bengal_desc">Bengal cats have a wild appearance with a gentle domestic temperament.</string>
+
+    <string name="breed_bombay_name">Bombay</string>
+    <string name="breed_bombay_desc">Bombay cats are sleek, black, and resemble miniature panthers.</string>
+
+    <string name="breed_birman_name">Birman</string>
+    <string name="breed_birman_desc">Birman cats are gentle and affectionate, with beautiful blue eyes.</string>
+
+    <string name="breed_british_shorthair_name">British Shorthair</string>
+    <string name="breed_british_shorthair_desc">Known for their round faces and dense coats, these cats are calm and dignified.</string>
+
+    <string name="breed_maine_coon_name">Maine Coon</string>
+    <string name="breed_maine_coon_desc">Large, friendly, and sociable cats with tufted ears and bushy tails.</string>
+
+    <string name="breed_persian_name">Persian</string>
+    <string name="breed_persian_desc">Persians are quiet, sweet, and require regular grooming due to long coats.</string>
+
+    <string name="breed_egyptian_mau_name">Egyptian Mau</string>
+    <string name="breed_egyptian_mau_desc">One of the few naturally spotted domestic cat breeds.</string>
+
+    <string name="breed_ragdoll_name">Ragdoll</string>
+    <string name="breed_ragdoll_desc">Ragdolls go limp when picked up and are extremely affectionate.</string>
+
+    <string name="breed_russian_blue_name">Russian Blue</string>
+    <string name="breed_russian_blue_desc">Elegant cats with a silvery-blue coat and green eyes.</string>
+
+    <string name="breed_siamese_name">Siamese</string>
+    <string name="breed_siamese_desc">Talkative and affectionate cats with striking blue eyes.</string>
+
+    <string name="breed_sphynx_name">Sphynx</string>
+    <string name="breed_sphynx_desc">Hairless, energetic, and love human attention.</string>
+
+    <!-- Dogs -->
+    <string name="breed_boxer_name">Boxer</string>
+    <string name="breed_boxer_desc">Boxers are strong, energetic dogs that love to play.</string>
+
+    <string name="breed_keeshond_name">Keeshond</string>
+    <string name="breed_keeshond_desc">Keeshonds are friendly and alert with a fox-like expression.</string>
+
+    <string name="breed_havanese_name">Havanese</string>
+    <string name="breed_havanese_desc">Havanese dogs are cheerful and great companions.</string>
+
+    <string name="breed_basset_hound_name">Basset Hound</string>
+    <string name="breed_basset_hound_desc">Low-slung dogs with a great sense of smell and calm demeanor.</string>
+
+    <string name="breed_english_setter_name">English Setter</string>
+    <string name="breed_english_setter_desc">Gentle and friendly with a speckled coat.</string>
+
+    <string name="breed_miniature_pinscher_name">Miniature Pinscher</string>
+    <string name="breed_miniature_pinscher_desc">Small but fearless, with a proud and confident personality.</string>
+
+    <string name="breed_chihuahua_name">Chihuahua</string>
+    <string name="breed_chihuahua_desc">Tiny and alert, Chihuahuas are full of personality.</string>
+
+    <string name="breed_great_pyrenees_name">Great Pyrenees</string>
+    <string name="breed_great_pyrenees_desc">Large and calm guardians, often used for livestock protection.</string>
+
+    <string name="breed_german_shorthaired_name">German Shorthaired</string>
+    <string name="breed_german_shorthaired_desc">Versatile and athletic hunting dogs.</string>
+
+    <string name="breed_beagle_name">Beagle</string>
+    <string name="breed_beagle_desc">Happy, curious dogs with great scent-tracking abilities.</string>
+
+    <string name="breed_staffordshire_bull_terrier_name">Staffordshire Bull Terrier</string>
+    <string name="breed_staffordshire_bull_terrier_desc">Muscular and loyal, known for their courage.</string>
+
+    <string name="breed_english_cocker_spaniel_name">English Cocker Spaniel</string>
+    <string name="breed_english_cocker_spaniel_desc">Merry and energetic dogs with long ears.</string>
+
+    <string name="breed_newfoundland_name">Newfoundland</string>
+    <string name="breed_newfoundland_desc">Giant dogs known for water rescue and gentle nature.</string>
+
+    <string name="breed_pomeranian_name">Pomeranian</string>
+    <string name="breed_pomeranian_desc">Fluffy and lively with a big personality in a tiny body.</string>
+
+    <string name="breed_leonberger_name">Leonberger</string>
+    <string name="breed_leonberger_desc">Large, calm, and friendly giants.</string>
+
+    <string name="breed_american_pit_bull_terrier_name">American Pit Bull Terrier</string>
+    <string name="breed_american_pit_bull_terrier_desc">Strong and loyal, often misunderstood.</string>
+
+    <string name="breed_wheaten_terrier_name">Wheaten Terrier</string>
+    <string name="breed_wheaten_terrier_desc">Soft-coated terriers known for friendliness.</string>
+
+    <string name="breed_japanese_chin_name">Japanese Chin</string>
+    <string name="breed_japanese_chin_desc">Elegant and charming lap dogs.</string>
+
+    <string name="breed_samoyed_name">Samoyed</string>
+    <string name="breed_samoyed_desc">Fluffy white dogs with a signature “smile.”</string>
+
+    <string name="breed_scottish_terrier_name">Scottish Terrier</string>
+    <string name="breed_scottish_terrier_desc">Independent and dignified with a distinctive profile.</string>
+
+    <string name="breed_shiba_inu_name">Shiba Inu</string>
+    <string name="breed_shiba_inu_desc">Alert and confident, with a fox-like appearance.</string>
+
+    <string name="breed_pug_name">Pug</string>
+    <string name="breed_pug_desc">Small, sociable dogs with wrinkled faces.</string>
+
+    <string name="breed_saint_bernard_name">Saint Bernard</string>
+    <string name="breed_saint_bernard_desc">Huge dogs with a gentle and patient temperament.</string>
+
+    <string name="breed_american_bulldog_name">American Bulldog</string>
+    <string name="breed_american_bulldog_desc">Strong, loyal, and athletic.</string>
+
+    <string name="breed_yorkshire_terrier_name">Yorkshire Terrier</string>
+    <string name="breed_yorkshire_terrier_desc">Small dogs with big personalities and long silky hair.</string>
+
+
+</resources>
+

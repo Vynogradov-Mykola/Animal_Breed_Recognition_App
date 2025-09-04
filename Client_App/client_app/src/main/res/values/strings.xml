@@ -5,7 +5,7 @@
     <string name="result">Результат буде тут</string>
     <string name="DwnFromUrl">Завантажити через URL</string>
     <string name="ChangeLang">Змінити мову</string>
-
+    <string name="recognition">Розпізнано:</string>
 
     <!-- Коти -->
     <string name="breed_abyssinian_name">Абіссинська</string>

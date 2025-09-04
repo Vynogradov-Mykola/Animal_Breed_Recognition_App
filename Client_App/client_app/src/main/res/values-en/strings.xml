@@ -5,7 +5,7 @@
 <string name="result" >Result will be soon</string>
 <string name="DwnFromUrl" >Download from URL</string>
 <string name="ChangeLang" >Change language</string>
-
+    <string name="recognition">Recognized:</string>
     <!-- Cats -->
     <string name="breed_abyssinian_name">Abyssinian</string>
     <string name="breed_abyssinian_desc">Abyssinian cats are known for their intelligence and playful personality.</string>

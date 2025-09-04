@@ -84,10 +84,20 @@ public class MainActivity extends AppCompatActivity {
         textResult = findViewById(R.id.text_result);
         imageView = findViewById(R.id.image_view);
         list_of_models = findViewById(R.id.model_list);
+        String systemLang = Locale.getDefault().getLanguage();
 
+        // Если язык системы русский, меняем на украинский
+        if (systemLang.equals("ru")) {
+            setLocale("uk");  // Используем ваш метод setLocale
+        }
         FloatingActionButton buttonLang = findViewById(R.id.button_lang);
         buttonLang.setOnClickListener(view -> {
-            String currentLang = getResources().getConfiguration().locale.getLanguage();
+            // Получаем текущий язык приложения из ресурсов
+            String currentLang = getResources().getConfiguration().getLocales().get(0).getLanguage();
+
+            if (currentLang.equals("ru")) {
+                setLocale("en");  //
+            }
             if (currentLang.equals("uk")) {
                 setLocale("en"); // переключаем на английский
             } else {
@@ -273,7 +283,9 @@ public class MainActivity extends AppCompatActivity {
         selectedImageBytes = stream.toByteArray();
 
         String imageBase64 = Base64.encodeToString(selectedImageBytes, Base64.NO_WRAP);
-        String message = userId + "||" + selectedTest + "||" + imageBase64;
+        String currentLang = Locale.getDefault().getLanguage();
+        if (currentLang=="ru") currentLang="uk";
+        String message = userId + "||" + selectedTest + "||" + imageBase64 + "||" + currentLang;
 
         runOnUiThread(() -> textResult.setText("Waiting for result"));
         mqttClient.publishWith()
@@ -289,7 +301,8 @@ public class MainActivity extends AppCompatActivity {
                 .qos(MqttQos.AT_LEAST_ONCE)
                 .callback(publish -> {
                     String result = new String(publish.getPayloadAsBytes(), StandardCharsets.UTF_8);
-                    runOnUiThread(() -> textResult.setText("Breed recognized: " + result));
+                    String res_rec = getString(R.string.recognition);
+                    runOnUiThread(() -> textResult.setText(res_rec + result));
                 })
                 .send();
     }

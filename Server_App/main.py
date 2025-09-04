@@ -114,7 +114,7 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe("animal/photo")
 
 
-breed_descriptions = {
+breed_descriptions_en = {
     "Abyssinian": "Abyssinian cats are known for their intelligence and playful personality.",
     "Bengal": "Bengal cats have a wild appearance with a gentle domestic temperament.",
     "Bombay": "Bombay cats are sleek, black, and resemble miniature panthers.",
@@ -153,6 +153,84 @@ breed_descriptions = {
     "American Bulldog": "Strong, loyal, and athletic.",
     "Yorkshire Terrier": "Small dogs with big personalities and long silky hair."
 }
+breed_descriptions_uk = {
+    "Abyssinian": "Абіссінські коти відомі своєю розумністю та грайливим характером.",
+    "Bengal": "Бенгальські коти мають дикий вигляд, але лагідний домашній темперамент.",
+    "Bombay": "Бомбейські коти гладкі, чорні, схожі на мініатюрних пантер.",
+    "Birman": "Бірманські коти ніжні та ласкаві, з красивими синіми очима.",
+    "British Shorthair": "Відомі своїми круглими обличчями та густою шерстю, ці коти спокійні та гідні.",
+    "Maine Coon": "Великі, дружелюбні та соціальні коти з китицями на вухах та пухнастими хвостами.",
+    "Persian": "Перські коти тихі, лагідні та потребують регулярного догляду через довгу шерсть.",
+    "Egyptian Mau": "Одна з небагатьох природньо плямистих порід домашніх котів.",
+    "Ragdoll": "Реагують м'яко при підйомі та надзвичайно ласкаві.",
+    "Russian Blue": "Елегантні коти зі сріблясто-блакитною шерстю та зеленими очима.",
+    "Siamese": "Балакучі та ласкаві коти з виразними блакитними очима.",
+    "Sphynx": "Лисі, енергійні та люблять увагу людини.",
+    "Boxer": "Боксерські собаки сильні, енергійні та люблять грати.",
+    "Keeshond": "Кішонди дружелюбні та пильні з лисоподібним виразом морди.",
+    "Havanese": "Гаванські собаки життєрадісні та чудові компаньйони.",
+    "Basset Hound": "Собаки з низьким корпусом, відмінним нюхом та спокійним характером.",
+    "English Setter": "Ніжні та дружелюбні, з плямистою шерстю.",
+    "Miniature Pinscher": "Маленькі, але безстрашні, з гордим та впевненим характером.",
+    "Chihuahua": "Крихітні та пильні, повні характеру.",
+    "Great Pyrenees": "Великі та спокійні охоронці, часто використовуються для захисту худоби.",
+    "German Shorthaired": "Універсальні та спортивні мисливські собаки.",
+    "Beagle": "Щасливі, допитливі собаки з чудовим нюхом.",
+    "Staffordshire Bull Terrier": "Міцні та віддані, відомі своєю сміливістю.",
+    "English Cocker Spaniel": "Веселі та енергійні собаки з довгими вухами.",
+    "New Found Land": "Гігантські собаки, відомі рятувальною діяльністю у воді та лагідним характером.",
+    "Pomeranian": "Пухнасті та життєрадісні, великі особистості у маленькому тілі.",
+    "Leonberger": "Великі, спокійні та дружелюбні гіганти.",
+    "American Pit Bull Terrier": "Сильні та віддані, часто неправильно зрозумілі.",
+    "Wheaten Terrier": "М’якошерсті тер’єри, відомі своєю дружелюбністю.",
+    "Japanese Chin": "Елегантні та чарівні собаки-компаньйони.",
+    "Samyod": "Пухнасті білі собаки з характерною «усмішкою».",
+    "Scottish Terrier": "Самостійні та гідні з характерним профілем.",
+    "Shiba Inu": "Пильні та впевнені, з лисоподібною зовнішністю.",
+    "Pug": "Маленькі, товариські собаки з морщинистими мордами.",
+    "Saint Bernard": "Величезні собаки з лагідним та терплячим характером.",
+    "American Bulldog": "Сильні, віддані та спортивні.",
+    "Yorkshire Terrier": "Маленькі собаки з великим характером та довгою шовковистою шерстю."
+}
+breed_names_uk = {
+    "Abyssinian": "Абіссінська",
+    "Bengal": "Бенгальська",
+    "Bombay": "Бомбейська",
+    "Birman": "Бірманська",
+    "British Shorthair": "Британська короткошерста",
+    "Maine Coon": "Мейн-кун",
+    "Persian": "Перська",
+    "Egyptian Mau": "Єгипетська Мау",
+    "Ragdoll": "Рагдолл",
+    "Russian Blue": "Російська блакитна",
+    "Siamese": "Сіамська",
+    "Sphynx": "Сфінкс",
+    "Boxer": "Боксер",
+    "Keeshond": "Кішонд",
+    "Havanese": "Гаванська",
+    "Basset Hound": "Бассет-хаунд",
+    "English Setter": "Англійський сетер",
+    "Miniature Pinscher": "Мініатюрний пінчер",
+    "Chihuahua": "Чихуахуа",
+    "Great Pyrenees": "Великі Піренеї",
+    "German Shorthaired": "Німецький короткошерстий",
+    "Beagle": "Бігль",
+    "Staffordshire Bull Terrier": "Стаффордширський бультер'єр",
+    "English Cocker Spaniel": "Англійський кокер-спанієль",
+    "New Found Land": "Ньюфаундленд",
+    "Pomeranian": "Померанський шпіц",
+    "Leonberger": "Леонбергер",
+    "American Pit Bull Terrier": "Американський пітбультер'єр",
+    "Wheaten Terrier": "Вітонський тер'єр",
+    "Japanese Chin": "Японський Чін",
+    "Samyod": "Самоїд",
+    "Scottish Terrier": "Шотландський тер'єр",
+    "Shiba Inu": "Шиба-іну",
+    "Pug": "Мопс",
+    "Saint Bernard": "Сенбернар",
+    "American Bulldog": "Американський бульдог",
+    "Yorkshire Terrier": "Йоркширський тер'єр"
+}
 def plot_confusion_matrix(model, dataset, class_names, save_path="confusion_matrix.png"):
     true_labels = []
     pred_labels = []
@@ -181,8 +259,14 @@ def on_message(client, userdata, msg):
     try:
         # Получаем сообщение от MQTT
         payload = msg.payload.decode()
-        user_id, model_N, image_b64 = payload.split("||")
+        user_id, model_N, image_b64, App_Localization = payload.split("||")
         print(model_N)
+        print(App_Localization)
+        if App_Localization.lower() == "uk":
+            descriptions = breed_descriptions_uk
+        else:
+            descriptions = breed_descriptions_en
+
         # Декодируем base64 изображение
         image_bytes = base64.b64decode(image_b64)
 
@@ -208,10 +292,17 @@ def on_message(client, userdata, msg):
         formatted_label = predicted_label.replace('_', ' ').title()
 
         # Получаем описание
-        description = breed_descriptions.get(formatted_label, "No description available.")
 
+        description = descriptions.get(formatted_label, "No description available.")
         # Объединяем название и описание
-        message = f"{formatted_label}: {description}"
+        if App_Localization.lower() == "uk":
+            breed_display_name = breed_names_uk.get(predicted_label, predicted_label)
+            description = breed_descriptions_uk.get(predicted_label, "Опис недоступний.")
+        else:
+            breed_display_name = predicted_label
+            description = breed_descriptions_en.get(predicted_label, "No description available.")
+        message = f"{breed_display_name}: {description}"
+        #message = f"{formatted_label}: {description}"
 
         # Публикуем результат
         client.publish(result_topic, message)

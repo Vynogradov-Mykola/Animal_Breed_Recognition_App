@@ -26,8 +26,90 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 from PIL import Image, ImageTk
 
+class CNNPetClassifier:
+    def __init__(self):
+        self.load_data()
+        self.model = self.build_model()
+        self.load_model_weights()
 
-class DeepPetClassifier:
+    def load_data(self):
+        (self.train_data, self.test_data), self.info = tfds.load(
+            "oxford_iiit_pet", split=["train", "test"], as_supervised=True, with_info=True
+        )
+        self.class_names = self.info.features["label"].names
+
+        # Добавляем аугментацию данных
+        self.train_data = self.train_data.map(self.preprocess).batch(32).prefetch(tf.data.AUTOTUNE)
+        self.test_data = self.test_data.map(self.preprocess).batch(32).prefetch(tf.data.AUTOTUNE)
+
+    def preprocess(self, image, label):
+        image = tf.image.resize(image, (128, 128)) / 255.0
+        image = tf.image.random_flip_left_right(image)
+        image = tf.image.random_brightness(image, max_delta=0.2)
+        return image, label
+
+    def build_model(self):
+        model = tf.keras.Sequential([
+            tf.keras.layers.Conv2D(32, (3, 3), activation="relu", input_shape=(128, 128, 3)),
+            tf.keras.layers.BatchNormalization(),
+            tf.keras.layers.MaxPooling2D((2, 2)),
+
+            tf.keras.layers.Conv2D(64, (3, 3), activation="relu"),
+            tf.keras.layers.BatchNormalization(),
+            tf.keras.layers.MaxPooling2D((2, 2)),
+
+            tf.keras.layers.Conv2D(128, (3, 3), activation="relu"),
+            tf.keras.layers.BatchNormalization(),
+            tf.keras.layers.MaxPooling2D((2, 2)),
+
+            tf.keras.layers.Conv2D(256, (3, 3), activation="relu"),
+            tf.keras.layers.BatchNormalization(),
+            tf.keras.layers.MaxPooling2D((2, 2)),
+
+            tf.keras.layers.Flatten(),
+            tf.keras.layers.Dense(256, activation="relu"),
+            tf.keras.layers.Dropout(0.3),
+            tf.keras.layers.Dense(128, activation="relu"),
+            tf.keras.layers.Dropout(0.2),
+            tf.keras.layers.Dense(len(self.class_names), activation="softmax")
+        ])
+
+        model.compile(
+            optimizer=tf.keras.optimizers.Adam(learning_rate=0.0001),
+            loss="sparse_categorical_crossentropy",
+            metrics=["accuracy"]
+        )
+
+
+        return model
+
+    def train(self, epochs=30):
+        self.model.fit(self.train_data, validation_data=self.test_data, epochs=epochs)
+        self.model.save_weights("cnn_pet.weights.h5")
+
+    def load_model_weights(self):
+        if os.path.exists("cnn_pet.weights.h5"):
+            self.model.load_weights("cnn_pet.weights.h5")
+            print("Model loaded.")
+        else:
+            print("Can`t find file.")
+            self.train()
+
+    def classify(self, image):
+        image = image.resize((128, 128))
+        image = np.array(image) / 255.0
+        image = np.expand_dims(image, axis=0)
+        predictions = self.model.predict(image)[0]
+      #  print("Predictions:", predictions)  # Для отладки
+      #  top_indices = np.argsort(predictions)[-3:][::-1]
+      #  results = [(self.class_names[i], predictions[i]) for i in top_indices]
+      #  return results
+        print("Predictions", predictions)
+        class_index = np.argmax(predictions)
+        confidence = np.max(predictions)
+        return self.class_names[class_index], confidence
+
+class MobileNetV2PetClassifier:
     def __init__(self):
         self.load_data()
         self.model = self.build_model()
@@ -67,12 +149,12 @@ class DeepPetClassifier:
 
     def train(self, epochs=5):
         self.model.fit(self.train_data, validation_data=self.test_data, epochs=epochs)
-        self.model.save_weights("pet_classifier_weights1.weights.h5")
+        self.model.save_weights("mobilenetv2_pet.weights.h5")
         plot_confusion_matrix(self.model, self.test_data, self.class_names)
 
     def load_model_weights(self):
-        if os.path.exists("pet_classifier_weights1.weights.h5"):
-            self.model.load_weights("pet_classifier_weights1.weights.h5")
+        if os.path.exists("mobilenetv2_pet.weights.h5"):
+            self.model.load_weights("mobilenetv2_pet.weights.h5")
             print('Weights loaded.')
         else:
             print('Weights file not found. Start training...')
@@ -89,8 +171,200 @@ class DeepPetClassifier:
         confidence = np.max(predictions)
         return self.class_names[class_index], confidence
 
+class ResNet50PetClassifier:
+    def __init__(self):
+        self.load_data()
+        self.model = self.build_model()
+        self.load_model_weights()
+
+    def load_data(self):
+        (self.train_data, self.test_data), self.info = tfds.load(
+            "oxford_iiit_pet", split=["train", "test"], as_supervised=True, with_info=True
+        )
+        self.class_names = self.info.features["label"].names
+
+        self.train_data = self.train_data.map(self.preprocess).batch(32).prefetch(tf.data.AUTOTUNE)
+        self.test_data = self.test_data.map(self.preprocess).batch(32).prefetch(tf.data.AUTOTUNE)
+
+    def preprocess(self, image, label):
+        image = tf.image.resize(image, (224, 224))
+        image = tf.keras.applications.resnet50.preprocess_input(image)
+        return image, label
+
+    def build_model(self):
+        base_model = tf.keras.applications.ResNet50(input_shape=(224, 224, 3), include_top=False, weights="imagenet")
+        base_model.trainable = False  # можно разморозить несколько последних слоёв
+
+        model = tf.keras.Sequential([
+            base_model,
+            tf.keras.layers.GlobalAveragePooling2D(),
+            tf.keras.layers.Dropout(0.3),
+            tf.keras.layers.Dense(len(self.class_names), activation="softmax")
+        ])
+
+        model.compile(optimizer=tf.keras.optimizers.Adam(1e-4),
+                      loss="sparse_categorical_crossentropy",
+                      metrics=["accuracy"])
+        return model
+
+    def train(self, epochs=5):
+        self.model.fit(self.train_data, validation_data=self.test_data, epochs=epochs)
+        self.model.save_weights("resnet50_pet.weights.h5")
+
+    def load_model_weights(self):
+        if os.path.exists("resnet50_pet.weights.h5"):
+            self.model.load_weights("resnet50_pet.weights.h5")
+            print("ResNet50 Weights loaded.")
+        else:
+            print("Weights not found, training ResNet50...")
+            self.train()
+
+    def classify(self, image):
+        image = image.resize((224, 224))
+        image = np.array(image)
+        image = tf.keras.applications.resnet50.preprocess_input(image)
+        image = np.expand_dims(image, axis=0)
+        predictions = self.model.predict(image)
+        class_index = np.argmax(predictions)
+        confidence = np.max(predictions)
+        return self.class_names[class_index], confidence
+class EfficientNetB0PetClassifier:
+    def __init__(self):
+        self.load_data()
+        self.model = self.build_model()
+        self.load_model_weights()
+
+    def load_data(self):
+        (self.train_data, self.test_data), self.info = tfds.load(
+            "oxford_iiit_pet", split=["train", "test"], as_supervised=True, with_info=True
+        )
+        self.class_names = self.info.features["label"].names
+
+        self.train_data = self.train_data.map(self.preprocess).batch(32).prefetch(tf.data.AUTOTUNE)
+        self.test_data = self.test_data.map(self.preprocess).batch(32).prefetch(tf.data.AUTOTUNE)
+
+    def preprocess(self, image, label):
+        image = tf.image.resize(image, (224, 224))
+        image = tf.keras.applications.efficientnet.preprocess_input(image)
+        return image, label
+
+    def build_model(self):
+        base_model = tf.keras.applications.EfficientNetB0(
+            input_shape=(224, 224, 3),
+            include_top=False,
+            weights="imagenet"
+        )
+        base_model.trainable = False  # можно разморозить несколько последних слоёв
+
+        model = tf.keras.Sequential([
+            base_model,
+            tf.keras.layers.GlobalAveragePooling2D(),
+            tf.keras.layers.Dropout(0.3),
+            tf.keras.layers.Dense(len(self.class_names), activation="softmax")
+        ])
+
+        model.compile(optimizer=tf.keras.optimizers.Adam(1e-4),
+                      loss="sparse_categorical_crossentropy",
+                      metrics=["accuracy"])
+        return model
+
+    def train(self, epochs=5):
+        self.model.fit(self.train_data, validation_data=self.test_data, epochs=epochs)
+        self.model.save_weights("efficientnetb0_pet.weights.h5")
+
+    def load_model_weights(self):
+        if os.path.exists("efficientnetb0_pet.weights.h5"):
+            self.model.load_weights("efficientnetb0_pet.weights.h5")
+            print("EfficientNetB0 Weights loaded.")
+        else:
+            print("Weights not found, training EfficientNetB0...")
+            self.train()
+
+    def classify(self, image):
+        image = image.resize((224, 224))
+        image = np.array(image)
+        image = tf.keras.applications.efficientnet.preprocess_input(image)
+        image = np.expand_dims(image, axis=0)
+        predictions = self.model.predict(image)
+        class_index = np.argmax(predictions)
+        confidence = np.max(predictions)
+        return self.class_names[class_index], confidence
+class DenseNet121PetClassifier:
+    def __init__(self):
+        self.load_data()
+        self.model = self.build_model()
+        self.load_model_weights()
+
+    def load_data(self):
+        (self.train_data, self.test_data), self.info = tfds.load(
+            "oxford_iiit_pet", split=["train", "test"], as_supervised=True, with_info=True
+        )
+        self.class_names = self.info.features["label"].names
+
+        self.train_data = self.train_data.map(self.preprocess).batch(32).prefetch(tf.data.AUTOTUNE)
+        self.test_data = self.test_data.map(self.preprocess).batch(32).prefetch(tf.data.AUTOTUNE)
+
+    def preprocess(self, image, label):
+        image = tf.image.resize(image, (224, 224))
+        image = tf.keras.applications.densenet.preprocess_input(image)
+        return image, label
+
+    def build_model(self):
+        base_model = tf.keras.applications.DenseNet121(
+            input_shape=(224, 224, 3),
+            include_top=False,
+            weights="imagenet"
+        )
+        base_model.trainable = False  # можно разморозить последние слои
+
+        model = tf.keras.Sequential([
+            base_model,
+            tf.keras.layers.GlobalAveragePooling2D(),
+            tf.keras.layers.Dropout(0.3),
+            tf.keras.layers.Dense(len(self.class_names), activation="softmax")
+        ])
+
+        model.compile(optimizer=tf.keras.optimizers.Adam(1e-4),
+                      loss="sparse_categorical_crossentropy",
+                      metrics=["accuracy"])
+        return model
+
+    def train(self, epochs=5):
+        self.model.fit(self.train_data, validation_data=self.test_data, epochs=epochs)
+        self.model.save_weights("densenet121_pet.weights.h5")
+
+    def load_model_weights(self):
+        if os.path.exists("densenet121_pet.weights.h5"):
+            self.model.load_weights("densenet121_pet.weights.h5")
+            print("DenseNet121 Weights loaded.")
+        else:
+            print("Weights not found, training DenseNet121...")
+            self.train()
+
+    def classify(self, image):
+        image = image.resize((224, 224))
+        image = np.array(image)
+        image = tf.keras.applications.densenet.preprocess_input(image)
+        image = np.expand_dims(image, axis=0)
+        predictions = self.model.predict(image)
+        class_index = np.argmax(predictions)
+        confidence = np.max(predictions)
+        return self.class_names[class_index], confidence
+
+
+
+
+
+
+
+
 
 # === Функция для создания графического интерфейса ===
+
+
+
+
+
 def create_gui():
     global root, img_label
     root = tk.Tk()
@@ -278,11 +552,20 @@ def on_message(client, userdata, msg):
         image = image.resize((250, 250), Image.Resampling.LANCZOS)
         photo = ImageTk.PhotoImage(image)
         global classifier
-
-        classifier = DeepPetClassifier()
+        if model_N== "MobileNetV2":
+            classifier = MobileNetV2PetClassifier()
+        if model_N== "test_3":
+            classifier = ResNet50PetClassifier()
+        if model_N== "test_4":
+            classifier = EfficientNetB0PetClassifier()
+        if model_N== "test_5":
+            classifier = DenseNet121PetClassifier()
+        if model_N == "CNN":
+            classifier = CNNPetClassifier()
         # plot_confusion_matrix(classifier.model, classifier.test_data, classifier.class_names)
         # Классификация изображения
         predicted_label, confidence = classifier.classify(image)
+        plot_confusion_matrix(classifier.model, classifier.test_data, classifier.class_names)
         print(predicted_label)
         print(confidence)
 
@@ -290,17 +573,17 @@ def on_message(client, userdata, msg):
         result_topic = f"animal/result/{user_id}"
 
         formatted_label = predicted_label.replace('_', ' ').title()
-
+        print(formatted_label)
         # Получаем описание
 
         description = descriptions.get(formatted_label, "No description available.")
         # Объединяем название и описание
         if App_Localization.lower() == "uk":
-            breed_display_name = breed_names_uk.get(predicted_label, predicted_label)
-            description = breed_descriptions_uk.get(predicted_label, "Опис недоступний.")
+            breed_display_name = breed_names_uk.get(formatted_label, formatted_label)
+            description = breed_descriptions_uk.get(formatted_label, "Опис недоступний.")
         else:
-            breed_display_name = predicted_label
-            description = breed_descriptions_en.get(predicted_label, "No description available.")
+            breed_display_name = formatted_label
+            description = breed_descriptions_en.get(formatted_label, "No description available.")
         message = f"{breed_display_name}: {description}"
         #message = f"{formatted_label}: {description}"
 

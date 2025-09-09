@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Base64;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -36,7 +37,7 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity {
 
     private final String serverUri = "test.mosquitto.org";
-    private final String userId = "user123";
+    private String userId;
     private final String topicPhoto = "animal/photo";
     private final String topicResultPrefix = "animal/result/";
     private SensorManager sensorManager;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imageView;
     private byte[] selectedImageBytes = null;
     private Spinner list_of_models;
-    private String selectedTest = "test_1"; // значение по умолчанию
+    private String selectedTest = "MobileNetV2"; // значение по умолчанию
 
     private final com.hivemq.client.mqtt.mqtt3.Mqtt3AsyncClient mqttClient = MqttClient.builder()
             .useMqttVersion3()
@@ -74,12 +75,15 @@ public class MainActivity extends AppCompatActivity {
 
         recreate(); // перезапускаем активность, чтобы применился язык
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        userId = Settings.Secure.getString(
+                getContentResolver(),
+                Settings.Secure.ANDROID_ID
+        );
         buttonSend = findViewById(R.id.button_send);
         textResult = findViewById(R.id.text_result);
         imageView = findViewById(R.id.image_view);
@@ -105,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 // список значений
-        String[] testOptions = {"test_1", "test_2", "test_3", "test_4"};
+        String[] testOptions = {"MobileNetV2", "CNN", "test_3", "test_4"};
 
 // адаптер
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -125,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                selectedTest = "test_1"; // fallback
+                selectedTest = "MobileNetV2"; // fallback
             }
         });
 
@@ -154,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         connectToMqtt();
-        setupLightSensor();
+
         buttonSend.setOnClickListener(view -> {
             pickImageLauncher.launch("image/*");
         });
@@ -165,62 +169,9 @@ public class MainActivity extends AppCompatActivity {
     private float lastLightLevel = -1;  // Последний уровень освещенности
 
 
-    private void setupLightSensor() {
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        if (sensorManager != null) {
-            lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
 
-            if (lightSensor != null) {
-                lightListener = new SensorEventListener() {
-                    @Override
-                    public void onSensorChanged(SensorEvent event) {
-                        float lightLevel = event.values[0]; // уровень освещенности в люксах
-                        long currentTime = System.currentTimeMillis();
 
-                        // Проверка, прошло ли достаточно времени с последнего изменения
-                        if (currentTime - lastChangeTime < DEBOUNCE_TIME) {
-                            return; // Если прошло слишком мало времени, игнорируем изменение
-                        }
 
-                        // Если уровень освещенности изменился существенно и прошел порог
-                        if (lightLevel < LIGHT_THRESHOLD && !isDarkTheme && lightLevel != lastLightLevel) {
-                            enableDarkTheme();
-                            isDarkTheme = true;
-                            lastLightLevel = lightLevel;
-                            lastChangeTime = currentTime;
-                        } else if (lightLevel >= LIGHT_THRESHOLD && isDarkTheme && lightLevel != lastLightLevel) {
-                            enableLightTheme();
-                            isDarkTheme = false;
-                            lastLightLevel = lightLevel;
-                            lastChangeTime = currentTime;
-                        }
-                    }
-
-                    @Override
-                    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-                    }
-                };
-
-                sensorManager.registerListener(lightListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
-            }
-        }
-    }
-
-    private void enableDarkTheme() {
-        runOnUiThread(() -> {
-            // Включаем темную тему без перезапуска активности
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            Toast.makeText(this, "Dark theme", Toast.LENGTH_SHORT).show();
-        });
-    }
-
-    private void enableLightTheme() {
-        runOnUiThread(() -> {
-            // Включаем светлую тему без перезапуска активности
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            Toast.makeText(this, "Light theme", Toast.LENGTH_SHORT).show();
-        });
-    }
 
     private void connectToMqtt() {
         mqttClient.connect()

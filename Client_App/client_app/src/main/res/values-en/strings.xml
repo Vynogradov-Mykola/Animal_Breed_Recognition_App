@@ -118,6 +118,8 @@
 
     <string name="breed_yorkshire_terrier_name">Yorkshire Terrier</string>
     <string name="breed_yorkshire_terrier_desc">Small dogs with big personalities and long silky hair.</string>
+    <string name="preview">Preview</string>
+    <string name="view_all_breeds">View all breeds</string>
 
 
 </resources>

@@ -119,5 +119,7 @@
 
     <string name="breed_yorkshire_terrier_name">Йоркширський тер’єр</string>
     <string name="breed_yorkshire_terrier_desc">Маленькі собаки з великим характером і довгою шовковистою шерстю.</string>
+    <string name="preview">Перегляд</string>
+    <string name="view_all_breeds">Переглянути всі породи</string>
 
 </resources>

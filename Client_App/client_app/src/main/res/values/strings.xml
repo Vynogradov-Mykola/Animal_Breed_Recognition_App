@@ -121,5 +121,13 @@
     <string name="breed_yorkshire_terrier_desc">Маленькі собаки з великим характером і довгою шовковистою шерстю.</string>
     <string name="preview">Перегляд</string>
     <string name="view_all_breeds">Переглянути всі породи</string>
+    <string name="ChooseImageFirst">Спочатку виберіть зображення!</string>
+    <string name="waiting_for_result">Очікуємо результат</string>
+    <string name="Cantloadurl">Не вдалося завантажити зображення з URL</string>
+    <string name="ImageError">Помилка вибору зображення</string>
+    <string name="mqtt_connect">Помилка підключення до сервера</string>
+    <string name="paste_url">Вставити URL</string>
+    <string name="load_url">Завантажити</string>
+    <string name="back_url">Назад</string>
 
 </resources>

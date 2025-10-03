@@ -25,7 +25,7 @@ import os
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from PIL import Image, ImageTk
-
+from keras.src.utils import plot_model
 class CNNPetClassifier:
     def __init__(self):
         self.load_data()
@@ -79,13 +79,14 @@ class CNNPetClassifier:
             loss="sparse_categorical_crossentropy",
             metrics=["accuracy"]
         )
-
+        plot_model(model, to_file='cnn_model_plot.png', show_shapes=True, show_layer_names=True)
 
         return model
 
     def train(self, epochs=30):
         self.model.fit(self.train_data, validation_data=self.test_data, epochs=epochs)
         self.model.save_weights("cnn_pet.weights.h5")
+        plot_confusion_matrix(self.model, self.test_data, self.class_names)
 
     def load_model_weights(self):
         if os.path.exists("cnn_pet.weights.h5"):
@@ -97,13 +98,11 @@ class CNNPetClassifier:
 
     def classify(self, image):
         image = image.resize((128, 128))
+
         image = np.array(image) / 255.0
         image = np.expand_dims(image, axis=0)
         predictions = self.model.predict(image)[0]
-      #  print("Predictions:", predictions)  # Для отладки
-      #  top_indices = np.argsort(predictions)[-3:][::-1]
-      #  results = [(self.class_names[i], predictions[i]) for i in top_indices]
-      #  return results
+
         print("Predictions", predictions)
         class_index = np.argmax(predictions)
         confidence = np.max(predictions)
@@ -144,7 +143,7 @@ class MobileNetV2PetClassifier:
 
         model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.0001), loss="sparse_categorical_crossentropy",
                       metrics=["accuracy"])
-
+        plot_model(model, to_file='moblenetv2_model_plot.png', show_shapes=True, show_layer_names=True)
         return model
 
     def train(self, epochs=5):
@@ -161,6 +160,7 @@ class MobileNetV2PetClassifier:
             self.train()
 
     def classify(self, image):
+
         image = image.resize((128, 128))
         image = np.array(image)
         image = tf.keras.applications.mobilenet_v2.preprocess_input(image)
@@ -205,11 +205,13 @@ class ResNet50PetClassifier:
         model.compile(optimizer=tf.keras.optimizers.Adam(1e-4),
                       loss="sparse_categorical_crossentropy",
                       metrics=["accuracy"])
+        plot_model(model, to_file='resnet_model_plot.png', show_shapes=True, show_layer_names=True)
         return model
 
     def train(self, epochs=5):
         self.model.fit(self.train_data, validation_data=self.test_data, epochs=epochs)
         self.model.save_weights("resnet50_pet.weights.h5")
+        plot_confusion_matrix(self.model, self.test_data, self.class_names)
 
     def load_model_weights(self):
         if os.path.exists("resnet50_pet.weights.h5"):
@@ -266,11 +268,13 @@ class EfficientNetB0PetClassifier:
         model.compile(optimizer=tf.keras.optimizers.Adam(1e-4),
                       loss="sparse_categorical_crossentropy",
                       metrics=["accuracy"])
+        plot_model(model, to_file='eff_model_plot.png', show_shapes=True, show_layer_names=True)
         return model
 
     def train(self, epochs=5):
         self.model.fit(self.train_data, validation_data=self.test_data, epochs=epochs)
         self.model.save_weights("efficientnetb0_pet.weights.h5")
+        plot_confusion_matrix(self.model, self.test_data, self.class_names)
 
     def load_model_weights(self):
         if os.path.exists("efficientnetb0_pet.weights.h5"):
@@ -327,11 +331,13 @@ class DenseNet121PetClassifier:
         model.compile(optimizer=tf.keras.optimizers.Adam(1e-4),
                       loss="sparse_categorical_crossentropy",
                       metrics=["accuracy"])
+        plot_model(model, to_file='densenet_model_plot.png', show_shapes=True, show_layer_names=True)
         return model
 
     def train(self, epochs=5):
         self.model.fit(self.train_data, validation_data=self.test_data, epochs=epochs)
         self.model.save_weights("densenet121_pet.weights.h5")
+        plot_confusion_matrix(self.model, self.test_data, self.class_names)
 
     def load_model_weights(self):
         if os.path.exists("densenet121_pet.weights.h5"):
@@ -389,83 +395,85 @@ def on_connect(client, userdata, flags, rc):
 
 
 breed_descriptions_en = {
-    "Abyssinian": "Abyssinian cats are known for their intelligence and playful personality.",
-    "Bengal": "Bengal cats have a wild appearance with a gentle domestic temperament.",
-    "Bombay": "Bombay cats are sleek, black, and resemble miniature panthers.",
-    "Birman": "Birman cats are gentle and affectionate, with beautiful blue eyes.",
-    "British Shorthair": "Known for their round faces and dense coats, these cats are calm and dignified.",
-    "Maine Coon": "Large, friendly, and sociable cats with tufted ears and bushy tails.",
-    "Persian": "Persians are quiet, sweet, and require regular grooming due to long coats.",
-    "Egyptian Mau": "One of the few naturally spotted domestic cat breeds.",
-    "Ragdoll": "Ragdolls go limp when picked up and are extremely affectionate.",
-    "Russian Blue": "Elegant cats with a silvery-blue coat and green eyes.",
-    "Siamese": "Talkative and affectionate cats with striking blue eyes.",
-    "Sphynx": "Hairless, energetic, and love human attention.",
-    "Boxer": "Boxers are strong, energetic dogs that love to play.",
-    "Keeshond": "Keeshonds are friendly and alert with a fox-like expression.",
-    "Havanese": "Havanese dogs are cheerful and great companions.",
-    "Basset Hound": "Low-slung dogs with a great sense of smell and calm demeanor.",
-    "English Setter": "Gentle and friendly with a speckled coat.",
-    "Miniature Pinscher": "Small but fearless, with a proud and confident personality.",
-    "Chihuahua": "Tiny and alert, Chihuahuas are full of personality.",
-    "Great Pyrenees": "Large and calm guardians, often used for livestock protection.",
-    "German Shorthaired": "Versatile and athletic hunting dogs.",
-    "Beagle": "Happy, curious dogs with great scent-tracking abilities.",
-    "Staffordshire Bull Terrier": "Muscular and loyal, known for their courage.",
-    "English Cocker Spaniel": "Merry and energetic dogs with long ears.",
-    "New Found Land": "Giant dogs known for water rescue and gentle nature.",
-    "Pomeranian": "Fluffy and lively with a big personality in a tiny body.",
-    "Leonberger": "Large, calm, and friendly giants.",
-    "American Pit Bull Terrier": "Strong and loyal, often misunderstood.",
-    "Wheaten Terrier": "Soft-coated terriers known for friendliness.",
-    "Japanese Chin": "Elegant and charming lap dogs.",
-    "Samyod": "Fluffy white dogs with a signature “smile.”",
-    "Scottish Terrier": "Independent and dignified with a distinctive profile.",
-    "Shiba Inu": "Alert and confident, with a fox-like appearance.",
-    "Pug": "Small, sociable dogs with wrinkled faces.",
-    "Saint Bernard": "Huge dogs with a gentle and patient temperament.",
-    "American Bulldog": "Strong, loyal, and athletic.",
-    "Yorkshire Terrier": "Small dogs with big personalities and long silky hair."
+    "Abyssinian": "Abyssinian cats are known for their intelligence and playful personality. Care: Provide climbing spaces, mental stimulation, and regular playtime.",
+    "Bengal": "Bengal cats have a wild appearance with a gentle domestic temperament. Care: They need lots of exercise, interactive toys, and space to climb.",
+    "Bombay": "Bombay cats are sleek, black, and resemble miniature panthers. Care: Brush weekly and give them plenty of social interaction.",
+    "Birman": "Birman cats are gentle and affectionate, with beautiful blue eyes. Care: Brush a few times a week and keep them indoors to protect their coat.",
+    "British Shorthair": "Known for their round faces and dense coats, these cats are calm and dignified. Care: Brush weekly and control diet to prevent obesity.",
+    "Maine Coon": "Large, friendly, and sociable cats with tufted ears and bushy tails. Care: Regular grooming and plenty of space for exercise are essential.",
+    "Persian": "Persians are quiet, sweet, and require regular grooming due to long coats. Care: Daily brushing and frequent eye cleaning are necessary.",
+    "Egyptian Mau": "One of the few naturally spotted domestic cat breeds. Care: Provide playtime and warmth, as they dislike cold climates.",
+    "Ragdoll": "Ragdolls go limp when picked up and are extremely affectionate. Care: Brush weekly and ensure they stay indoors for safety.",
+    "Russian Blue": "Elegant cats with a silvery-blue coat and green eyes. Care: Brush weekly and keep to a routine, as they dislike change.",
+    "Siamese": "Talkative and affectionate cats with striking blue eyes. Care: Provide attention, toys, and interaction to prevent loneliness.",
+    "Sphynx": "Hairless, energetic, and love human attention. Care: Bathe weekly and keep them warm in cooler climates.",
+    "Boxer": "Boxers are strong, energetic dogs that love to play. Care: Daily exercise and consistent training are crucial.",
+    "Keeshond": "Keeshonds are friendly and alert with a fox-like expression. Care: Brush several times a week to maintain their thick coat.",
+    "Havanese": "Havanese dogs are cheerful and great companions. Care: Brush regularly and provide moderate exercise.",
+    "Basset Hound": "Low-slung dogs with a great sense of smell and calm demeanor. Care: Clean ears often and ensure regular walks.",
+    "English Setter": "Gentle and friendly with a speckled coat. Care: Brush frequently and provide lots of exercise.",
+    "Miniature Pinscher": "Small but fearless, with a proud and confident personality. Care: Daily walks and protection from cold weather are important.",
+    "Chihuahua": "Tiny and alert, Chihuahuas are full of personality. Care: Protect them from cold and avoid overfeeding.",
+    "Great Pyrenees": "Large and calm guardians, often used for livestock protection. Care: Regular grooming and plenty of outdoor space are needed.",
+    "German Shorthaired": "Versatile and athletic hunting dogs. Care: Daily exercise and mental stimulation are a must.",
+    "Beagle": "Happy, curious dogs with great scent-tracking abilities. Care: Lots of exercise and attention to prevent mischief.",
+    "Staffordshire Bull Terrier": "Muscular and loyal, known for their courage. Care: Provide firm but kind training and daily activity.",
+    "English Cocker Spaniel": "Merry and energetic dogs with long ears. Care: Brush often and clean ears regularly.",
+    "New Found Land": "Giant dogs known for water rescue and gentle nature. Care: Groom frequently and provide space for exercise.",
+    "Pomeranian": "Fluffy and lively with a big personality in a tiny body. Care: Brush daily and monitor dental health.",
+    "Leonberger": "Large, calm, and friendly giants. Care: Regular grooming and daily exercise are essential.",
+    "American Pit Bull Terrier": "Strong and loyal, often misunderstood. Care: Consistent training and plenty of exercise are key.",
+    "Wheaten Terrier": "Soft-coated terriers known for friendliness. Care: Brush often to prevent matting and provide regular exercise.",
+    "Japanese Chin": "Elegant and charming lap dogs. Care: Brush frequently and protect from extreme heat.",
+    "Samyod": "Fluffy white dogs with a signature “smile.” Care: Brush several times a week and ensure daily activity.",
+    "Scottish Terrier": "Independent and dignified with a distinctive profile. Care: Regular hand-stripping or trimming is needed.",
+    "Shiba Inu": "Alert and confident, with a fox-like appearance. Care: Brush weekly and provide firm training.",
+    "Pug": "Small, sociable dogs with wrinkled faces. Care: Clean facial folds often and monitor breathing health.",
+    "Saint Bernard": "Huge dogs with a gentle and patient temperament. Care: Brush frequently and ensure regular but moderate exercise.",
+    "American Bulldog": "Strong, loyal, and athletic. Care: Provide structured training and daily exercise.",
+    "Yorkshire Terrier": "Small dogs with big personalities and long silky hair. Care: Brush daily and trim hair regularly."
 }
+
 breed_descriptions_uk = {
-    "Abyssinian": "Абіссінські коти відомі своєю розумністю та грайливим характером.",
-    "Bengal": "Бенгальські коти мають дикий вигляд, але лагідний домашній темперамент.",
-    "Bombay": "Бомбейські коти гладкі, чорні, схожі на мініатюрних пантер.",
-    "Birman": "Бірманські коти ніжні та ласкаві, з красивими синіми очима.",
-    "British Shorthair": "Відомі своїми круглими обличчями та густою шерстю, ці коти спокійні та гідні.",
-    "Maine Coon": "Великі, дружелюбні та соціальні коти з китицями на вухах та пухнастими хвостами.",
-    "Persian": "Перські коти тихі, лагідні та потребують регулярного догляду через довгу шерсть.",
-    "Egyptian Mau": "Одна з небагатьох природньо плямистих порід домашніх котів.",
-    "Ragdoll": "Реагують м'яко при підйомі та надзвичайно ласкаві.",
-    "Russian Blue": "Елегантні коти зі сріблясто-блакитною шерстю та зеленими очима.",
-    "Siamese": "Балакучі та ласкаві коти з виразними блакитними очима.",
-    "Sphynx": "Лисі, енергійні та люблять увагу людини.",
-    "Boxer": "Боксерські собаки сильні, енергійні та люблять грати.",
-    "Keeshond": "Кішонди дружелюбні та пильні з лисоподібним виразом морди.",
-    "Havanese": "Гаванські собаки життєрадісні та чудові компаньйони.",
-    "Basset Hound": "Собаки з низьким корпусом, відмінним нюхом та спокійним характером.",
-    "English Setter": "Ніжні та дружелюбні, з плямистою шерстю.",
-    "Miniature Pinscher": "Маленькі, але безстрашні, з гордим та впевненим характером.",
-    "Chihuahua": "Крихітні та пильні, повні характеру.",
-    "Great Pyrenees": "Великі та спокійні охоронці, часто використовуються для захисту худоби.",
-    "German Shorthaired": "Універсальні та спортивні мисливські собаки.",
-    "Beagle": "Щасливі, допитливі собаки з чудовим нюхом.",
-    "Staffordshire Bull Terrier": "Міцні та віддані, відомі своєю сміливістю.",
-    "English Cocker Spaniel": "Веселі та енергійні собаки з довгими вухами.",
-    "New Found Land": "Гігантські собаки, відомі рятувальною діяльністю у воді та лагідним характером.",
-    "Pomeranian": "Пухнасті та життєрадісні, великі особистості у маленькому тілі.",
-    "Leonberger": "Великі, спокійні та дружелюбні гіганти.",
-    "American Pit Bull Terrier": "Сильні та віддані, часто неправильно зрозумілі.",
-    "Wheaten Terrier": "М’якошерсті тер’єри, відомі своєю дружелюбністю.",
-    "Japanese Chin": "Елегантні та чарівні собаки-компаньйони.",
-    "Samyod": "Пухнасті білі собаки з характерною «усмішкою».",
-    "Scottish Terrier": "Самостійні та гідні з характерним профілем.",
-    "Shiba Inu": "Пильні та впевнені, з лисоподібною зовнішністю.",
-    "Pug": "Маленькі, товариські собаки з морщинистими мордами.",
-    "Saint Bernard": "Величезні собаки з лагідним та терплячим характером.",
-    "American Bulldog": "Сильні, віддані та спортивні.",
-    "Yorkshire Terrier": "Маленькі собаки з великим характером та довгою шовковистою шерстю."
+    "Abyssinian": "Абіссінські коти відомі своєю розумністю та грайливим характером. Догляд: забезпечуйте простір для лазання, ігри та розумові завдання.",
+    "Bengal": "Бенгальські коти мають дикий вигляд, але лагідний домашній темперамент. Догляд: потребують багато вправ, інтерактивних іграшок та місця для лазання.",
+    "Bombay": "Бомбейські коти гладкі, чорні, схожі на мініатюрних пантер. Догляд: розчісуйте щотижня та приділяйте їм багато уваги.",
+    "Birman": "Бірманські коти ніжні та ласкаві, з красивими синіми очима. Догляд: розчісуйте кілька разів на тиждень та тримайте вдома.",
+    "British Shorthair": "Відомі своїми круглими обличчями та густою шерстю, ці коти спокійні та гідні. Догляд: розчісуйте раз на тиждень і контролюйте вагу.",
+    "Maine Coon": "Великі, дружелюбні та соціальні коти з китицями на вухах та пухнастими хвостами. Догляд: регулярний догляд за шерстю та багато простору для активності.",
+    "Persian": "Перські коти тихі, лагідні та потребують регулярного догляду через довгу шерсть. Догляд: щоденне розчісування та очищення очей.",
+    "Egyptian Mau": "Одна з небагатьох природньо плямистих порід домашніх котів. Догляд: забезпечуйте ігри та тепло, бо вони не люблять холод.",
+    "Ragdoll": "Реагують м'яко при підйомі та надзвичайно ласкаві. Догляд: розчісуйте раз на тиждень та тримайте вдома.",
+    "Russian Blue": "Елегантні коти зі сріблясто-блакитною шерстю та зеленими очима. Догляд: розчісуйте раз на тиждень та дотримуйтеся рутини.",
+    "Siamese": "Балакучі та ласкаві коти з виразними блакитними очима. Догляд: потребують багато уваги та ігор, щоб не нудьгували.",
+    "Sphynx": "Лисі, енергійні та люблять увагу людини. Догляд: купайте щотижня та тримайте в теплі.",
+    "Boxer": "Боксерські собаки сильні, енергійні та люблять грати. Догляд: потрібні щоденні вправи та послідовне виховання.",
+    "Keeshond": "Кішонди дружелюбні та пильні з лисоподібним виразом морди. Догляд: розчісуйте кілька разів на тиждень.",
+    "Havanese": "Гаванські собаки життєрадісні та чудові компаньйони. Догляд: розчісуйте регулярно та давайте помірні навантаження.",
+    "Basset Hound": "Собаки з низьким корпусом, відмінним нюхом та спокійним характером. Догляд: часто чистіть вуха та забезпечуйте прогулянки.",
+    "English Setter": "Ніжні та дружелюбні, з плямистою шерстю. Догляд: розчісуйте часто та давайте багато активності.",
+    "Miniature Pinscher": "Маленькі, але безстрашні, з гордим та впевненим характером. Догляд: щоденні прогулянки та захист від холоду.",
+    "Chihuahua": "Крихітні та пильні, повні характеру. Догляд: оберігайте від холоду та не перегодовуйте.",
+    "Great Pyrenees": "Великі та спокійні охоронці, часто використовуються для захисту худоби. Догляд: регулярне розчісування та багато простору.",
+    "German Shorthaired": "Універсальні та спортивні мисливські собаки. Догляд: щоденні вправи та розумові ігри.",
+    "Beagle": "Щасливі, допитливі собаки з чудовим нюхом. Догляд: потрібні тривалі прогулянки та увага.",
+    "Staffordshire Bull Terrier": "Міцні та віддані, відомі своєю сміливістю. Догляд: виховання з любов'ю та щоденна активність.",
+    "English Cocker Spaniel": "Веселі та енергійні собаки з довгими вухами. Догляд: часто розчісуйте та чистіть вуха.",
+    "New Found Land": "Гігантські собаки, відомі рятувальною діяльністю у воді та лагідним характером. Догляд: регулярний догляд за шерстю та багато простору.",
+    "Pomeranian": "Пухнасті та життєрадісні, великі особистості у маленькому тілі. Догляд: щоденне розчісування та догляд за зубами.",
+    "Leonberger": "Великі, спокійні та дружелюбні гіганти. Догляд: потребують щоденних прогулянок та регулярного розчісування.",
+    "American Pit Bull Terrier": "Сильні та віддані, часто неправильно зрозумілі. Догляд: послідовне виховання та багато вправ.",
+    "Wheaten Terrier": "М’якошерсті тер’єри, відомі своєю дружелюбністю. Догляд: часто розчісуйте, щоб уникнути ковтунів.",
+    "Japanese Chin": "Елегантні та чарівні собаки-компаньйони. Догляд: регулярно розчісуйте та оберігайте від спеки.",
+    "Samyod": "Пухнасті білі собаки з характерною «усмішкою». Догляд: кілька разів на тиждень розчісування та щоденні прогулянки.",
+    "Scottish Terrier": "Самостійні та гідні з характерним профілем. Догляд: потрібне регулярне триммінгування шерсті.",
+    "Shiba Inu": "Пильні та впевнені, з лисоподібною зовнішністю. Догляд: розчісуйте раз на тиждень та проводьте чітке виховання.",
+    "Pug": "Маленькі, товариські собаки з морщинистими мордами. Догляд: чистіть складки на морді та слідкуйте за диханням.",
+    "Saint Bernard": "Величезні собаки з лагідним та терплячим характером. Догляд: регулярне розчісування та помірні вправи.",
+    "American Bulldog": "Сильні, віддані та спортивні. Догляд: потрібне виховання та щоденні фізичні навантаження.",
+    "Yorkshire Terrier": "Маленькі собаки з великим характером та довгою шовковистою шерстю. Догляд: щоденне розчісування та підстригання шерсті."
 }
+
 breed_names_uk = {
     "Abyssinian": "Абіссінська",
     "Bengal": "Бенгальська",
@@ -554,18 +562,18 @@ def on_message(client, userdata, msg):
         global classifier
         if model_N== "MobileNetV2":
             classifier = MobileNetV2PetClassifier()
-        if model_N== "test_3":
+        if model_N== "ResNet50":
             classifier = ResNet50PetClassifier()
-        if model_N== "test_4":
+        if model_N== "EfficientNetB0":
             classifier = EfficientNetB0PetClassifier()
-        if model_N== "test_5":
+        if model_N== "DenseNet121":
             classifier = DenseNet121PetClassifier()
         if model_N == "CNN":
             classifier = CNNPetClassifier()
         # plot_confusion_matrix(classifier.model, classifier.test_data, classifier.class_names)
         # Классификация изображения
         predicted_label, confidence = classifier.classify(image)
-        plot_confusion_matrix(classifier.model, classifier.test_data, classifier.class_names)
+       # plot_confusion_matrix(classifier.model, classifier.test_data, classifier.class_names)
         print(predicted_label)
         print(confidence)
 

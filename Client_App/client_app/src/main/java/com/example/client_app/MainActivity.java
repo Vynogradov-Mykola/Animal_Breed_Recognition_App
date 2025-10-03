@@ -30,6 +30,7 @@ import com.hivemq.client.mqtt.datatypes.MqttQos;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.UUID;
@@ -109,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 // список значений
-        String[] testOptions = {"MobileNetV2", "CNN", "test_3", "test_4"};
+        String[] testOptions = {"MobileNetV2", "CNN", "ResNet50", "EfficientNetB0", "DenseNet121"};
 
 // адаптер
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -142,17 +143,17 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton buttonUrl = findViewById(R.id.button_url);
         buttonUrl.setOnClickListener(view -> {
             android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-            builder.setTitle("Paste URL");
+            builder.setTitle(R.string.paste_url);
 
             final android.widget.EditText input = new android.widget.EditText(this);
             input.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_URI);
             builder.setView(input);
 
-            builder.setPositiveButton("Load", (dialog, which) -> {
+            builder.setPositiveButton(R.string.load_url, (dialog, which) -> {
                 String url = input.getText().toString();
                 loadImageFromUrl(url);
             });
-            builder.setNegativeButton("Back", (dialog, which) -> dialog.cancel());
+            builder.setNegativeButton(R.string.back_url, (dialog, which) -> dialog.cancel());
 
             builder.show();
         });
@@ -163,11 +164,6 @@ public class MainActivity extends AppCompatActivity {
             pickImageLauncher.launch("image/*");
         });
     }
-    private static final float LIGHT_THRESHOLD = 20;  // Порог освещенности для переключения темы
-    private static final long DEBOUNCE_TIME = 50000;  // Время задержки между переключениями в миллисекундах
-    private long lastChangeTime = 0;  // Время последнего изменения темы
-    private float lastLightLevel = -1;  // Последний уровень освещенности
-
 
 
 
@@ -177,10 +173,10 @@ public class MainActivity extends AppCompatActivity {
         mqttClient.connect()
                 .whenComplete((ack, throwable) -> {
                     if (throwable == null) {
-                    //    runOnUiThread(() -> Toast.makeText(this, "MQTT Підключено", Toast.LENGTH_SHORT).show());
+
                         subscribeForResult();
                     } else {
-                        runOnUiThread(() -> Toast.makeText(this, "Помилка підключення MQTT", Toast.LENGTH_SHORT).show());
+                        runOnUiThread(() -> Toast.makeText(this, R.string.mqtt_connect, Toast.LENGTH_SHORT).show());
                     }
                 });
     }
@@ -195,13 +191,13 @@ public class MainActivity extends AppCompatActivity {
             sendPhotoRequest();
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this, "Помилка вибору зображення", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.ImageError, Toast.LENGTH_SHORT).show();
         }
     }
     private void loadImageFromUrl(String urlString) {
         new Thread(() -> {
             try {
-                java.net.URL url = new java.net.URL(urlString);
+                URL url = new URL(urlString);
                 InputStream inputStream = url.openStream();
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
 
@@ -217,13 +213,13 @@ public class MainActivity extends AppCompatActivity {
                 });
             } catch (Exception e) {
                 e.printStackTrace();
-                runOnUiThread(() -> Toast.makeText(this, "Не вдалося завантажити зображення з URL", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(this, R.string.Cantloadurl, Toast.LENGTH_SHORT).show());
             }
         }).start();
     }
     private void sendPhotoRequest() {
         if (selectedImageBytes == null) {
-            Toast.makeText(this, "Спочатку виберіть зображення!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.ChooseImageFirst, Toast.LENGTH_SHORT).show();
             return;
         }
 //  сжатие изображения (если оно слишком большое)
@@ -238,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
         if (currentLang=="ru") currentLang="uk";
         String message = userId + "||" + selectedTest + "||" + imageBase64 + "||" + currentLang;
 
-        runOnUiThread(() -> textResult.setText("Waiting for result"));
+        runOnUiThread(() -> textResult.setText(R.string.waiting_for_result));
         mqttClient.publishWith()
                 .topic(topicPhoto)
                 .qos(MqttQos.AT_LEAST_ONCE)

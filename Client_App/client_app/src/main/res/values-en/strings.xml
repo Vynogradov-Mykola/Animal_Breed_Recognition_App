@@ -2,7 +2,7 @@
 <string name="app_name">Client_App</string>
 <string name="back_button" >Back</string>
 <string name="request_send" >Send request</string>
-<string name="result" >Result will be soon</string>
+<string name="result" >Result will be here</string>
 <string name="DwnFromUrl" >Download from URL</string>
 <string name="ChangeLang" >Change language</string>
     <string name="recognition">Recognized:</string>
@@ -120,7 +120,14 @@
     <string name="breed_yorkshire_terrier_desc">Small dogs with big personalities and long silky hair.</string>
     <string name="preview">Preview</string>
     <string name="view_all_breeds">View all breeds</string>
-
+    <string name="ChooseImageFirst">Choose image first!</string>
+    <string name="waiting_for_result">Waiting for result</string>
+    <string name="Cantloadurl">Can`t load url</string>
+    <string name="ImageError">Image error</string>
+    <string name="paste_url">Paste URL</string>
+    <string name="mqtt_connect">No connection to server</string>
+    <string name="load_url">Load</string>
+    <string name="back_url">Back</string>
 
 </resources>
 

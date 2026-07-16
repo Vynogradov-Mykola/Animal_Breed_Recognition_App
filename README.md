@@ -7,6 +7,7 @@ The application uses convolutional neural networks (CNNs) to recognize and class
 The main goal of the project is to design and implement an efficient image classification system using modern deep learning architectures.
 The system performs image preprocessing, inference using trained neural network models, and returns the predicted class along with the confidence score.
 The project focuses on practical application of computer vision techniques and demonstrates the use of deep learning models for real-world image recognition tasks.
+Video: https://www.youtube.com/watch?v=_1WlquRFwc8
 
 🧠 Used Technologies
     
